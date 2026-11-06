@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Authenticate Cask or Bottle - Whiskey Vault</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+</head>
+<body>
+
+    <!-- Liquid Amber & Embers Canvas -->
+    <canvas id="galaxy-canvas"></canvas>
+    
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="index.html" class="nav-brand">
+                <div class="nav-brand-icon">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M8 2h8v4H8zM6 6h12l-1 14a2 2 0 0 1-2 2H9a2 2 0 0 1-2-2L6 6zM6 10h12"/>
+                    </svg>
+                </div>
+                <div>
+                    <h2>Whiskey Vault</h2>
+                    <span class="tagline-sub">Cask & Bottle Provenance</span>
+                </div>
+            </a>
+            <ul class="nav-menu">
+                <li class="nav-item">
+                    <a href="index.html" class="nav-link">Home</a>
+                </li>
+                <li class="nav-item">
+                    <a href="search.html" class="nav-link">Search Vault</a>
+                </li>
+                <li class="nav-item auth-item" id="auth-nav">
+                    <a href="login.html" class="nav-link">Sign In</a>
+                </li>
+                <li class="nav-item upload-item" id="upload-nav" style="display: none;">
+                    <a href="upload.html" class="nav-link active btn-nav-action">Authenticate Bottle</a>
+                </li>
+                <li class="nav-item logout-item" id="logout-nav" style="display: none;">
+                    <a href="#" class="nav-link" onclick="logout()">Logout</a>
+                </li>
+            </ul>
+            <div class="hamburger">
+                <span class="bar"></span>
+                <span class="bar"></span>
+                <span class="bar"></span>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Upload Form Container -->
+    <div class="upload-container">
+        <div class="upload-form glass-card" id="upload-form">
+            <div class="upload-header">
+                <h2>Authenticate & Record Provenance</h2>
+                <p>Anchor cask deeds, authenticity certificates, and laboratory assays permanently on the blockchain</p>
+            </div>
+            
+            <form id="document-form">
+                <div class="form-group">
+                    <label for="doc-title">Bottle or Cask Title *</label>
+                    <input type="text" id="doc-title" name="title" required placeholder="e.g., The Macallan 1940 37-Year-Old Cask #1024 - Deed of Ownership">
+                </div>
+
+                <div class="form-row-2">
+                    <div class="form-group">
+                        <label for="doc-category">Document Category *</label>
+                        <select id="doc-category" name="category" required>
+                            <option value="Certificate of Authenticity">Certificate of Authenticity</option>
+                            <option value="Cask Deed of Ownership">Cask Deed of Ownership</option>
+                            <option value="Distillation Log">Distillation & Fill Log</option>
+                            <option value="Chemical Assay">Spectrometer Chemical Assay</option>
+                            <option value="Bottle Release Receipt">Official Bottle Release Receipt</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="doc-distillery">Distillery & Region</label>
+                        <input type="text" id="doc-distillery" name="distillery" placeholder="e.g., Bowmore Distillery, Islay">
+                    </div>
+                </div>
+
+                <div class="form-row-2">
+                    <div class="form-group">
+                        <label for="doc-vintage">Vintage / Age</label>
+                        <input type="text" id="doc-vintage" name="vintage" placeholder="e.g., 1964 (29 Years Old)">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="doc-cask">Cask # / Bottle #</label>
+                        <input type="text" id="doc-cask" name="caskNumber" placeholder="e.g., Oloroso Butt #2116 / Bottle 12">
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="doc-description">Provenance Notes & Tasting Evaluation</label>
+                    <textarea id="doc-description" name="description" rows="3" placeholder="Describe the cask history, fill date, ABV %, storage warehouse, and provenance trail..."></textarea>
+                </div>
+                
+                <div class="form-group">
+                    <label for="doc-tags">Authentication Tags</label>
+                    <input type="text" id="doc-tags" name="tags" placeholder="e.g., Single Malt, Islay, Sherry Butt, Cask Deed, Rare">
+                    <small>Separate keywords with commas for search discovery</small>
+                </div>
+                
+                <div class="form-group">
+                    <label for="doc-file">Upload Certificate or Deed Document *</label>
+                    <div class="file-input-container">
+                        <input type="file" id="doc-file" name="file" required accept=".pdf,.doc,.docx,.txt,.jpg,.jpeg,.png">
+                        <div class="file-input-label">
+                            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                                <polyline points="7,10 12,15 17,10"></polyline>
+                                <line x1="12" y1="15" x2="12" y2="3"></line>
+                            </svg>
+                            <span id="file-text">Click or drag certificate PDF, image, or scan here</span>
+                        </div>
+                    </div>
+                    <div class="file-info" id="file-info" style="display: none;"></div>
+                </div>
+                
+                <div class="form-group">
+                    <div class="checkbox-group">
+                        <input type="checkbox" id="terms-upload" name="terms" required>
+                        <label for="terms-upload">I confirm this whiskey record and associated certificate are genuine, authentic, and authorized for permanent blockchain recording.</label>
+                    </div>
+                </div>
+                
+                <div class="upload-actions">
+                    <button type="submit" class="btn-primary" id="upload-btn">
+                        <span class="btn-text">Authenticate on Blockchain</span>
+                        <span class="btn-loading" style="display: none;">
+                            <svg class="spinner" width="20" height="20" viewBox="0 0 24 24" style="vertical-align: middle; animation: spin 1s linear infinite;">
+                                <circle cx="12" cy="12" r="10" fill="none" stroke="currentColor" stroke-width="3" stroke-dasharray="31.416" stroke-dashoffset="10"/>
+                            </svg>
+                            Recording to Ledger...
+                        </span>
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Success Modal -->
+    <div class="success-message" id="upload-success" style="display: none;">
+        <div class="success-content glass-card">
+            <div class="success-icon">✓</div>
+            <h3>Whiskey Provenance Recorded!</h3>
+            <p>Your document certificate is cryptographically pinned to IPFS and notarized on Ethereum.</p>
+            <div class="transaction-info">
+                <p><strong>Transaction ID:</strong> <span id="transaction-id"></span></p>
+                <p><strong>Block Hash:</strong> <span id="block-hash"></span></p>
+                <p><strong>IPFS CID:</strong> <span id="ipfs-cid"></span></p>
+                <p><strong>Timestamp:</strong> <span id="timestamp"></span></p>
+                <p style="margin-top: 14px;">
+                    <strong>Document:</strong> <a id="download-link" href="#" target="_blank">Download Certificate</a> |
+                    <strong>Verification:</strong> <a id="verify-link" href="#" target="_blank">Verify Ledger Entry</a>
+                </p>
+            </div>
+            <div class="success-actions">
+                <button onclick="uploadAnother()" class="btn-secondary">Authenticate Another</button>
+                <button onclick="viewDocuments()" class="btn-primary">View Vault Records</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Blocked Access (Guest) -->
+    <div class="blocked-access" id="blocked-access" style="display: none;">
+        <div class="blocked-content glass-card">
+            <div class="success-icon" style="background: rgba(229,169,59,0.2); color: var(--amber-bright);">🔒</div>
+            <h3>Authentication Required</h3>
+            <p>Please sign in to your collector or distillery account to record new whiskey deeds and certificates.</p>
+            <div style="margin-top: 24px;">
+                <button onclick="goToLogin()" class="btn-primary">Sign In to Vault</button>
+            </div>
+        </div>
+    </div>
+
+    <style>
+        @keyframes spin { 100% { transform: rotate(360deg); } }
+    </style>
+
+    <script src="galaxy.js"></script>
+    <script>
+    function checkPageAuth() {
+        const token = localStorage.getItem('whiskey_token') || localStorage.getItem('token');
+        if (!token) {
+            document.getElementById('upload-form').style.display = 'none';
+            document.getElementById('blocked-access').style.display = 'flex';
+        } else {
+            document.getElementById('upload-form').style.display = 'block';
+            document.getElementById('blocked-access').style.display = 'none';
+        }
+    }
+    checkPageAuth();
+
+    function goToLogin() {
+        window.location.href = 'login.html';
+    }
+
+    // File input preview
+    document.getElementById('doc-file').onchange = function() {
+        const file = this.files[0];
+        if (file) {
+            document.getElementById('file-text').textContent = file.name;
+            document.getElementById('file-info').style.display = 'block';
+            document.getElementById('file-info').textContent = `Selected: ${file.name} (${Math.round(file.size / 1024)} KB)`;
+        } else {
+            document.getElementById('file-text').textContent = 'Click or drag certificate PDF, image, or scan here';
+            document.getElementById('file-info').style.display = 'none';
+        }
+    };
+
+    // Form submission
+    document.getElementById('document-form').onsubmit = async function(e) {
+        e.preventDefault();
+        const token = localStorage.getItem('whiskey_token') || localStorage.getItem('token');
+        if (!token) {
+            alert('Authentication required.');
+            return;
+        }
+
+        const title = document.getElementById('doc-title').value.trim();
+        const category = document.getElementById('doc-category').value;
+        const distillery = document.getElementById('doc-distillery').value.trim();
+        const vintage = document.getElementById('doc-vintage').value.trim();
+        const caskNumber = document.getElementById('doc-cask').value.trim();
+        const description = document.getElementById('doc-description').value.trim();
+        const tags = document.getElementById('doc-tags').value.trim();
+        const fileInput = document.getElementById('doc-file');
+
+        if (!fileInput.files.length) {
+            alert('Please select a certificate file to upload.');
+            return;
+        }
+
+        document.getElementById('upload-btn').disabled = true;
+        document.querySelector('.btn-text').style.display = 'none';
+        document.querySelector('.btn-loading').style.display = 'inline-block';
+
+        const formData = new FormData();
+        formData.append('title', title);
+        formData.append('category', category);
+        formData.append('distillery', distillery);
+        formData.append('vintage', vintage);
+        formData.append('caskNumber', caskNumber);
+        formData.append('description', description);
+        formData.append('tags', tags);
+        formData.append('file', fileInput.files[0]);
+
+        try {
+            const res = await fetch('/api/upload', {
+                method: 'POST',
+                headers: {
+                    'Authorization': 'Bearer ' + token
+                },
+                body: formData
+            });
+
+            const data = await res.json();
+
+            document.getElementById('upload-btn').disabled = false;
+            document.querySelector('.btn-text').style.display = 'inline';
+            document.querySelector('.btn-loading').style.display = 'none';
+
+            if (data.success && data.doc) {
+                document.getElementById('upload-form').style.display = 'none';
+                document.getElementById('upload-success').style.display = 'flex';
+                document.getElementById('transaction-id').textContent = data.doc.txHash || '';
+                document.getElementById('block-hash').textContent = data.doc.blockHash || '';
+                document.getElementById('ipfs-cid').textContent = data.doc.ipfsCid || '';
+                document.getElementById('timestamp').textContent = data.doc.timestamp ? new Date(data.doc.timestamp * 1000).toLocaleString() : new Date().toLocaleString();
+                
+                const fileUrl = data.doc.fileUrl || `/ipfs/${data.doc.ipfsCid}`;
+                document.getElementById('download-link').href = fileUrl;
+                document.getElementById('verify-link').href = data.doc.txHash ? `https://sepolia.etherscan.io/tx/${data.doc.txHash}` : '#';
+            } else {
+                alert(data.message || 'Upload failed.');
+            }
+        } catch (err) {
+            document.getElementById('upload-btn').disabled = false;
+            document.querySelector('.btn-text').style.display = 'inline';
+            document.querySelector('.btn-loading').style.display = 'none';
+            alert('Upload failed. Please check network connection.');
+        }
+    };
+
+    function uploadAnother() {
+        document.getElementById('upload-success').style.display = 'none';
+        document.getElementById('upload-form').style.display = 'block';
+        document.getElementById('document-form').reset();
+        document.getElementById('file-text').textContent = 'Click or drag certificate PDF, image, or scan here';
+        document.getElementById('file-info').style.display = 'none';
+    }
+
+    function viewDocuments() {
+        window.location.href = 'search.html';
+    }
+    </script>
+    <script src="script.js"></script>
+</body>
+</html>
