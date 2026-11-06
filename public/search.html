@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Search Whiskey Provenance - Whiskey Vault</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+</head>
+<body>
+    
+    <!-- Liquid Amber & Embers Canvas -->
+    <canvas id="galaxy-canvas"></canvas>
+    
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="index.html" class="nav-brand">
+                <div class="nav-brand-icon">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M8 2h8v4H8zM6 6h12l-1 14a2 2 0 0 1-2 2H9a2 2 0 0 1-2-2L6 6zM6 10h12"/>
+                    </svg>
+                </div>
+                <div>
+                    <h2>Whiskey Vault</h2>
+                    <span class="tagline-sub">Cask & Bottle Provenance</span>
+                </div>
+            </a>
+            <ul class="nav-menu">
+                <li class="nav-item">
+                    <a href="index.html" class="nav-link">Home</a>
+                </li>
+                <li class="nav-item">
+                    <a href="search.html" class="nav-link active">Search Vault</a>
+                </li>
+                <li class="nav-item auth-item" id="auth-nav">
+                    <a href="login.html" class="nav-link">Sign In</a>
+                </li>
+                <li class="nav-item upload-item" id="upload-nav" style="display: none;">
+                    <a href="upload.html" class="nav-link btn-nav-action">Authenticate Bottle</a>
+                </li>
+                <li class="nav-item logout-item" id="logout-nav" style="display: none;">
+                    <a href="#" class="nav-link" onclick="logout()">Logout</a>
+                </li>
+            </ul>
+            <div class="hamburger">
+                <span class="bar"></span>
+                <span class="bar"></span>
+                <span class="bar"></span>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Search Section -->
+    <section class="search-section">
+        <div class="container">
+            <div class="search-header">
+                <h1>Search Whiskey Provenance Registry</h1>
+                <p>Verify bottle certificates, cask ownership deeds, distillation logs, or blockchain transaction hashes</p>
+            </div>
+            
+            <div class="search-controls glass-card">
+                <div class="search-input-group">
+                    <input type="text" id="search-input" placeholder="Search by title, distillery, vintage, cask #, or hash..." onkeyup="performSearchDebounced()">
+                    <button onclick="performDocumentSearch()" class="search-button">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="11" cy="11" r="8"></circle>
+                            <path d="m21 21-4.35-4.35"></path>
+                        </svg>
+                    </button>
+                </div>
+                
+                <div class="search-filters">
+                    <select id="category-filter" onchange="applyFilters()">
+                        <option value="">All Categories</option>
+                        <option value="Cask Deed">Cask Deed</option>
+                        <option value="Certificate">Certificate of Authenticity</option>
+                        <option value="Distillation Log">Distillation Log</option>
+                        <option value="Analysis">Chemical Assay</option>
+                        <option value="Single Malt">Single Malt</option>
+                    </select>
+
+                    <select id="date-filter" onchange="applyFilters()">
+                        <option value="">All Dates</option>
+                        <option value="today">Today</option>
+                        <option value="week">This Week</option>
+                        <option value="month">This Month</option>
+                        <option value="year">This Year</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Search Results Section -->
+    <section class="search-results">
+        <div class="container">
+            <div class="results-header">
+                <h2 id="results-count">Recent Provenance Records</h2>
+                <div class="view-options">
+                    <button onclick="setView('grid')" class="view-btn active" data-view="grid" title="Grid View">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <rect x="3" y="3" width="7" height="7"></rect>
+                            <rect x="14" y="3" width="7" height="7"></rect>
+                            <rect x="14" y="14" width="7" height="7"></rect>
+                            <rect x="3" y="14" width="7" height="7"></rect>
+                        </svg>
+                    </button>
+                    <button onclick="setView('list')" class="view-btn" data-view="list" title="List View">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <line x1="8" y1="6" x2="21" y2="6"></line>
+                            <line x1="8" y1="12" x2="21" y2="12"></line>
+                            <line x1="8" y1="18" x2="21" y2="18"></line>
+                            <line x1="3" y1="6" x2="3.01" y2="6"></line>
+                            <line x1="3" y1="12" x2="3.01" y2="12"></line>
+                            <line x1="3" y1="18" x2="3.01" y2="18"></line>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+            
+            <div class="results-container" id="results-container">
+                <!-- Records injected by script.js -->
+            </div>
+            
+            <div class="no-results" id="no-results" style="display: none;">
+                <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                    <circle cx="11" cy="11" r="8"></circle>
+                    <path d="m21 21-4.35-4.35"></path>
+                </svg>
+                <h3>No Matching Whiskey Records Found</h3>
+                <p>Try searching by distillery (e.g., Macallan, Springbank, Yamazaki), vintage, or adjusting the category filters.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Inspection Modal Overlay -->
+    <div class="modal-overlay" id="document-modal">
+        <div class="modal-content glass-card" onclick="event.stopPropagation()">
+            <div class="modal-header">
+                <h3 id="modal-title">Whiskey Provenance Record</h3>
+                <button onclick="closeModal()" class="close-btn" aria-label="Close modal">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="18" y1="6" x2="6" y2="18"></line>
+                        <line x1="6" y1="6" x2="18" y2="18"></line>
+                    </svg>
+                </button>
+            </div>
+            <div class="modal-body" id="modal-body">
+                <!-- Details injected by script.js -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-bottom">
+                <p>&copy; 2026 Whiskey Vault. Secured by Ethereum Smart Contracts & IPFS.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="galaxy.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>
