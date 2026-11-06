@@ -1,0 +1,23 @@
+version: '3.8'
+
+services:
+  whiskey-vault:
+    build: .
+    container_name: whiskey_vault_app
+    restart: unless-stopped
+    ports:
+      - "3000:3000"
+    environment:
+      - PORT=3000
+      - NODE_ENV=production
+      - JWT_SECRET=whiskey_vault_super_secure_jwt_secret_key_2026
+      # Set your live credentials if desired, or leave empty for embedded resilient ledger
+      - MONGODB_URI=
+      - PINATA_API_KEY=
+      - PINATA_API_SECRET=
+      - INFURA_ENDPOINT=
+      - PRIVATE_KEY=
+      - CONTRACT_ADDRESS=
+    volumes:
+      - ./data:/app/data
+      - ./public/uploads:/app/public/uploads
