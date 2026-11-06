@@ -1,0 +1,42 @@
+[
+  {
+    "id": "usr_1794013828380_ryam3",
+    "name": "Master Distiller",
+    "email": "test_1794013828281@whiskeyvault.com",
+    "passwordHash": "$2a$10$4q9aLeDeREnjhIumc4nvrOOT7UiNIfqBPu9CpA8.1KyqBIXJ6n3da",
+    "role": "collector",
+    "createdAt": "2026-11-07T01:10:28.380Z"
+  },
+  {
+    "id": "usr_1794014068906_hwiz4",
+    "name": "Master Distiller",
+    "email": "test_1794014068812@whiskeyvault.com",
+    "passwordHash": "$2a$10$8bKMwILh88fMCslp6gSWGuXirunk12BKXaBNVQIZG.9oufuy.rQTa",
+    "role": "collector",
+    "createdAt": "2026-11-07T01:14:28.906Z"
+  },
+  {
+    "id": "usr_1794014089376_t4q6h",
+    "name": "Master Distiller",
+    "email": "test_1794014089285@whiskeyvault.com",
+    "passwordHash": "$2a$10$yTIcaODiBT//oCAT3UPtieXNmO9bdkEHIvPGSyixzoGL9QEW3CUiu",
+    "role": "collector",
+    "createdAt": "2026-11-07T01:14:49.376Z"
+  },
+  {
+    "id": "usr_1794014264166_qtvb9",
+    "name": "Master Distiller",
+    "email": "test_1794014264077@whiskeyvault.com",
+    "passwordHash": "$2a$10$34v.CI5w.xM5aGgAFju.EOYMpW57LXmAVjBEaHqR2e53XM16FcV3a",
+    "role": "collector",
+    "createdAt": "2026-11-07T01:17:44.166Z"
+  },
+  {
+    "id": "usr_1794014657864_kdnjg",
+    "name": "Master Distiller",
+    "email": "test_1794014657773@whiskeyvault.com",
+    "passwordHash": "$2a$10$0PlIoqq6J9gE3w0C9LCU4u97ttISOUQob9/rMQUav/s/wP4YHHre.",
+    "role": "collector",
+    "createdAt": "2026-11-07T01:24:17.864Z"
+  }
+]
