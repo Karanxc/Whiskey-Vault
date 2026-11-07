@@ -49,7 +49,7 @@ graph TD
 
 ### 2. Installation
 ```bash
-git clone https://github.com/Karanxc/EVault.git "Whiskey Vault"
+git clone https://github.com/Karanxc/Whiskey-Vault
 cd "Whiskey Vault"
 npm install
 ```
